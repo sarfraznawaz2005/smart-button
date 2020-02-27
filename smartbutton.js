@@ -5,47 +5,33 @@ class SmartButton extends HTMLElement {
         this.attachShadow({
             mode: 'open'
         });
-        
+
         this.shadowRoot.innerHTML = '<button type="submit"><slot><slot></button>';
+
+        this._button = this.shadowRoot.querySelector("button");
     }
 
     connectedCallback() {
-        this._button = this.shadowRoot.querySelector("button");
-        this.shadowRoot.querySelector("button").addEventListener('click', this._submit.bind(this));
-    }
+        this._button.addEventListener('click', function (e) {
+            var textProperty = ('innerText' in this) ? 'innerText' : 'textContent';
+            var label = this[textProperty];
+            var timeout = this.getAttribute('timeout') || 5000;
+            var submit = this.parentNode.appendChild(document.createElement('button'));
 
-    disconnectedCallback() {
-        this.shadowRoot.querySelector("button").removeEventListener('click', this._submit.bind(this));
-    }
+            submit.style.display = 'none';
 
-    _submit() {
-        let textProperty = ('innerText' in this) ? 'innerText' : 'textContent';
-        let label = this[textProperty];
-        let timeout = this.getAttribute('timeout') || 5000;
-        let form = this.findParentForm(this);
+            this._button.disabled = true;
+            this[textProperty] = this.getAttribute('text') || 'Wait...';
 
-        this._button.disabled = true;
-        this[textProperty] = this.getAttribute('text') || 'Wait...';
+            setTimeout(function () {
+                this[textProperty] = label;
+                this._button.disabled = false;
+            }.bind(this), timeout);
 
-        if (form) {
-            form.submit();
-        }
+            submit.click();
 
-        setTimeout(function() {
-            this[textProperty] = label;
-            this._button.disabled = false;
-        }.bind(this), timeout);
-    }
-
-    findParentForm(el) {
-        let parent = el.parentNode;
-
-        if ((typeof findParentForm !== 'undefined') && (parent && parent.tagName != 'FORM')) {
-            parent = findParentForm(parent);
-        }
-
-        return parent.tagName == 'FORM' ? parent : null;
+        }.bind(this));
     }
 }
 
-customElements.define('smart-button', SmartButton);
+window.customElements.define('smart-button', SmartButton);

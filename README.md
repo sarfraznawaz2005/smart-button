@@ -3,7 +3,7 @@
 A button of type `submit` that when clicked does these things automatically:
 
 - Disables itself (to avoid duplicate form submissions)
-- Changes text to "Wait..." by default
+- Changes text to `Wait...` by default
 - Enables back and restores original button text after given time
 
 
@@ -27,7 +27,7 @@ A button of type `submit` that when clicked does these things automatically:
 
 ## Attributes
 
-- `timeout`: Time button will be enabled back and restore orignal text. Default 5000
+- `timeout`: Time button will be enabled back and restore original text. Default `5000`
 - `text`: Label of button that will be applied when button is clicked. Default `Wait...`
 
 **Example**
