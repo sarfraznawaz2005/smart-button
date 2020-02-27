@@ -14,14 +14,15 @@ class SmartButton extends HTMLElement {
     connectedCallback() {
         this._button.addEventListener('click', function (e) {
             var textProperty = ('innerText' in this) ? 'innerText' : 'textContent';
-            var label = this[textProperty];
+            var label = this[textProperty];            
             var timeout = this.getAttribute('timeout') || 5000;
+            var text = this.getAttribute('text') || 'Wait...';
             var submit = this.parentNode.appendChild(document.createElement('button'));
 
             submit.style.display = 'none';
 
             this._button.disabled = true;
-            this[textProperty] = this.getAttribute('text') || 'Wait...';
+            this[textProperty] = text;
 
             setTimeout(function () {
                 this[textProperty] = label;
